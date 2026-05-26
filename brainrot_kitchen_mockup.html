@@ -1,0 +1,146 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: 'DM Sans', system-ui, sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500&display=swap');
+
+.phone { width: 320px; min-height: 640px; background: #E8450A; margin: 0 auto; border-radius: 32px; overflow: hidden; border: 3px solid #1A1A1A; }
+.app-header { background: #E8450A; padding: 16px 16px 12px; display: flex; align-items: center; justify-content: space-between; }
+.app-logo { font-family: 'Bebas Neue', 'Arial Black', sans-serif; font-size: 22px; color: #FFF5E1; letter-spacing: 0.05em; }
+.app-logo em { color: #F7C948; font-style: normal; }
+.exp-btn { font-size: 10px; color: #FFF5E1; border: 1.5px solid rgba(255,255,255,0.35); padding: 4px 10px; border-radius: 20px; background: none; }
+
+.tab-bar { display: flex; background: #1A1A1A; }
+.tab-btn { flex: 1; padding: 10px 4px; background: none; border: none; border-bottom: 3px solid transparent; color: rgba(255,255,255,0.4); font-size: 9px; font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.1em; cursor: pointer; }
+.tab-btn.on { color: #F7C948; border-bottom-color: #F7C948; }
+
+.body { background: #E8450A; padding: 16px; min-height: 500px; }
+
+.section-label { font-family: 'Bebas Neue', sans-serif; font-size: 11px; color: rgba(255,245,225,0.6); letter-spacing: 0.15em; margin-bottom: 10px; }
+
+.form-block { background: #FFF5E1; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.form-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; color: #1A1A1A; letter-spacing: 0.05em; margin-bottom: 12px; line-height: 1; }
+.form-title span { color: #E8450A; }
+
+.field { margin-bottom: 10px; }
+.field-label { font-size: 9px; color: #888; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; }
+.field-input { background: white; border: 1.5px solid #E0D8CC; border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #1A1A1A; width: 100%; }
+.field-input.focus { border-color: #D4437C; }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+.chip { font-size: 11px; padding: 5px 11px; border-radius: 20px; border: 1.5px solid #E0D8CC; background: white; color: #888; }
+.chip.on { border-color: #E8450A; background: rgba(232,69,10,0.08); color: #E8450A; font-weight: 500; }
+
+.day-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.day-name { font-family: 'Bebas Neue', sans-serif; font-size: 11px; color: #E8450A; letter-spacing: 0.08em; width: 44px; flex-shrink: 0; }
+.day-input { flex: 1; background: white; border: 1.5px solid #E0D8CC; border-radius: 7px; padding: 7px 10px; font-size: 12px; color: #1A1A1A; }
+
+.stock-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid #E0D8CC; }
+.stock-row:last-child { border: none; }
+.stock-name { flex: 1; font-size: 13px; color: #1A1A1A; }
+.pill { font-size: 9px; font-family: 'Bebas Neue', sans-serif; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.08em; }
+.pill.ok { background: #E6F4F1; color: #2a9d8f; }
+.pill.low { background: #FFF3E0; color: #E65100; }
+.pill.empty { background: #FDECEA; color: #E8450A; }
+
+.emoji-row { display: flex; gap: 6px; margin-bottom: 10px; }
+.emo { font-size: 22px; background: white; border: 2px solid #E0D8CC; border-radius: 10px; padding: 6px 9px; }
+.emo.on { border-color: #D4437C; background: rgba(212,67,124,0.08); }
+
+.btn-main { width: 100%; padding: 13px; background: #D4437C; border: none; border-radius: 10px; font-family: 'Bebas Neue', sans-serif; font-size: 17px; color: white; letter-spacing: 0.1em; cursor: pointer; margin-top: 4px; }
+.btn-ghost { width: 100%; padding: 11px; background: transparent; border: 1.5px solid rgba(255,245,225,0.3); border-radius: 10px; font-family: 'Bebas Neue', sans-serif; font-size: 14px; color: #FFF5E1; letter-spacing: 0.08em; cursor: pointer; margin-top: 8px; }
+
+.courses-box { background: #FFF5E1; border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.courses-hint { font-size: 12px; color: #888; line-height: 1.6; margin-bottom: 12px; }
+</style>
+
+<h2 class="sr-only">Maquette de l'app brainrot-kitchen — design orange pop avec formulaires crème</h2>
+
+<div style="background: #1A1A1A; padding: 24px 0; border-radius: 16px;">
+<div style="display: flex; gap: 16px; justify-content: center; overflow-x: auto; padding: 0 16px;">
+
+<div class="phone">
+  <div class="app-header">
+    <div class="app-logo">brain<em>rot</em>-kitchen</div>
+    <div class="exp-btn">⬇ export</div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn on">MENUS</div>
+    <div class="tab-btn">STOCK</div>
+    <div class="tab-btn">RETOURS</div>
+    <div class="tab-btn">COURSES</div>
+  </div>
+  <div class="body">
+    <div class="section-label">SEMAINE EN COURS</div>
+    <div class="form-block">
+      <div class="form-title">PETIT-<span>DÉJ.</span></div>
+      <div class="chip-row">
+        <div class="chip on">Oeufs 🥚</div>
+        <div class="chip">Yaourt</div>
+        <div class="chip">Smoothie</div>
+        <div class="chip">Pain+PB</div>
+      </div>
+      <div class="field">
+        <div class="field-label">autre idée</div>
+        <div class="field-input" style="color:#bbb;">autre idée...</div>
+      </div>
+    </div>
+    <div class="form-block">
+      <div class="form-title">DÎNERS</div>
+      <div class="day-row"><div class="day-name">LUNDI</div><div class="day-input">Pasta végé</div></div>
+      <div class="day-row"><div class="day-name">MARDI</div><div class="day-input" style="color:#bbb;">dîner...</div></div>
+      <div class="day-row"><div class="day-name">MERCREDI</div><div class="day-input">Curry lentilles</div></div>
+      <div class="day-row"><div class="day-name">JEUDI</div><div class="day-input" style="color:#bbb;">dîner...</div></div>
+      <div class="day-row"><div class="day-name">VENDREDI</div><div class="day-input">Poisson + riz</div></div>
+    </div>
+    <div class="btn-ghost">💾 SAUVEGARDER</div>
+  </div>
+</div>
+
+<div class="phone">
+  <div class="app-header">
+    <div class="app-logo">brain<em>rot</em>-kitchen</div>
+    <div class="exp-btn">⬇ export</div>
+  </div>
+  <div class="tab-bar">
+    <div class="tab-btn">MENUS</div>
+    <div class="tab-btn">STOCK</div>
+    <div class="tab-btn on">RETOURS</div>
+    <div class="tab-btn">COURSES</div>
+  </div>
+  <div class="body">
+    <div class="section-label">CE QU'ON A MANGÉ</div>
+    <div class="form-block">
+      <div class="form-title">FEEDBACK <span>FAMILLE</span></div>
+      <div class="field">
+        <div class="field-label">Repas</div>
+        <div class="field-input focus">Curry de lentilles</div>
+      </div>
+      <div class="field-label">Réaction</div>
+      <div class="emoji-row">
+        <div class="emo">😍</div>
+        <div class="emo on">😊</div>
+        <div class="emo">😐</div>
+        <div class="emo">😣</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Qui n'a pas aimé ?</div>
+        <div class="field-input" style="color:#bbb;">ex: papa, James...</div>
+      </div>
+      <div class="field">
+        <div class="field-label">Note</div>
+        <div class="field-input" style="height:50px; color:#bbb;">manquait de sel...</div>
+      </div>
+      <div class="btn-main">ENREGISTRER</div>
+    </div>
+    <div class="form-block">
+      <div class="form-title">STOCK <span>FRIGO</span></div>
+      <div class="stock-row"><span class="stock-name">Oeufs</span><span class="pill ok">OK ✓</span></div>
+      <div class="stock-row"><span class="stock-name">Lentilles</span><span class="pill low">PEU</span></div>
+      <div class="stock-row"><span class="stock-name">Tofu</span><span class="pill empty">VIDE</span></div>
+      <div class="stock-row"><span class="stock-name">Yaourt</span><span class="pill ok">OK ✓</span></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
