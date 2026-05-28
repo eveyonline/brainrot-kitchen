@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>brainrot-kitchen</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0f0f0f;
+      color: #f0f0f0;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #header {
+      padding: 16px 20px 8px;
+      font-size: 13px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #header span { font-weight: 600; color: #f0f0f0; font-size: 15px; }
+
+    #stock-bar {
+      padding: 8px 20px;
+      font-size: 12px;
+      color: #888;
+      border-bottom: 1px solid #1e1e1e;
+    }
+    #stock-bar b { color: #f0a500; }
+
+    /* === MAIN AREA === */
+    #main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      gap: 20px;
+    }
+
+    /* === BIG MIC BUTTON === */
+    #mic-btn {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: #f0f0f0;
+      color: #0f0f0f;
+      border: none;
+      font-size: 44px;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      -webkit-tap-highlight-color: transparent;
+    }
+    #mic-btn:active { transform: scale(0.93); }
+    #mic-btn.listening { background: #ff3b30; animation: pulse 1s infinite; }
+    #mic-btn.thinking { background: #f0a500; }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+
+    #mic-label {
+      font-size: 14px;
+      color: #888;
+      text-align: center;
+    }
+
+    /* === CONTEXT CHIPS === */
+    #chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .chip {
+      padding: 8px 16px;
+      border: 1px solid #333;
+      border-radius: 99px;
+      font-size: 13px;
+      color: #ccc;
+      cursor: pointer;
+      background: transparent;
+      -webkit-tap-highlight-color: transparent;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .chip:active, .chip.selected {
+      background: #f0f0f0;
+      color: #0f0f0f;
+      border-color: #f0f0f0;
+    }
+
+    /* === TEXT INPUT fallback === */
+    #text-row {
+      display: flex;
+      width: 100%;
+      gap: 8px;
+    }
+    #text-input {
+      flex: 1;
+      padding: 12px 16px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      color: #f0f0f0;
+      font-size: 15px;
+      outline: none;
+    }
+    #text-input::placeholder { color: #555; }
+    #send-btn {
+      padding: 12px 18px;
+      background: #f0f0f0;
+      color: #0f0f0f;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* === SUGGESTIONS === */
+    #suggestions {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #suggestions.visible { display: flex; }
+
+    .suggestion {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 14px;
+      padding: 14px 16px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 0.15s;
+    }
+    .suggestion:active { border-color: #f0f0f0; }
+    .suggestion .s-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .suggestion .s-meta { font-size: 12px; color: #888; }
+    .suggestion .s-ok { float: right; font-size: 11px; color: #4caf50; margin-top: 2px; }
+
+    #suggestions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: #888;
+    }
+    #btn-other {
+      font-size: 12px;
+      color: #f0a500;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px 0;
+    }
+
+    /* === POST-MEAL === */
+    #postmeal {
+      width: 100%;
+      display: none;
+      flex-direction: column;
+      gap: 14px;
+    }
+    #postmeal.visible { display: flex; }
+
+    #postmeal h3 { font-size: 15px; color: #ccc; }
+    #emoji-row {
+      display: flex;
+      justify-content: space-around;
+    }
+    .emoji-btn {
+      font-size: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 12px;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.1s;
+    }
+    .emoji-btn:active { transform: scale(1.2); }
+
+    #used-ingredients {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.6;
+    }
+    #btn-update-stock {
+      width: 100%;
+      padding: 14px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 12px;
+      color: #f0f0f0;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* === LOADING === */
+    #loader {
+      display: none;
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+    }
+    #loader.visible { display: block; }
+
+    /* === ERROR === */
+    #error-msg {
+      display: none;
+      font-size: 12px;
+      color: #ff3b30;
+      text-align: center;
+    }
+    #error-msg.visible { display: block; }
+
+    /* settings icon */
+    #btn-settings {
+      background: none;
+      border: none;
+      color: #555;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    /* settings panel */
+    #settings-panel {
+      display: none;
+      padding: 16px 20px;
+      border-top: 1px solid #1e1e1e;
+      background: #0f0f0f;
+      font-size: 13px;
+    }
+    #settings-panel.visible { display: block; }
+    #settings-panel label { color: #888; display: block; margin-bottom: 6px; }
+    #api-key-input {
+      width: 100%;
+      padding: 10px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 13px;
+      font-family: monospace;
+      margin-bottom: 10px;
+    }
+    #stock-input {
+      width: 100%;
+      padding: 10px;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #f0f0f0;
+      font-size: 13px;
+      margin-bottom: 10px;
+      min-height: 80px;
+    }
+    #btn-save-settings {
+      padding: 8px 20px;
+      background: #f0f0f0;
+      color: #0f0f0f;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div id="header">
+  <span>🧠 brainrot-kitchen</span>
+  <button id="btn-settings" title="Settings">⚙️</button>
+</div>
+
+<div id="stock-bar">
+  stock: <b id="stock-preview">tap ⚙️ to add ingredients</b>
+</div>
+
+<div id="settings-panel">
+  <label>Anthropic API key</label>
+  <input id="api-key-input" type="password" placeholder="sk-ant-...">
+  <label>What's in the fridge / shelves (free text)</label>
+  <textarea id="stock-input" placeholder="eggs, pasta, zucchini, feta, canned tomatoes, rice, tofu, pesto..."></textarea>
+  <button id="btn-save-settings">Save</button>
+</div>
+
+<div id="main">
+
+  <button id="mic-btn" aria-label="Ask what to cook">🎙️</button>
+  <div id="mic-label">tap &amp; speak — or type below</div>
+
+  <div id="chips">
+    <button class="chip" data-prompt="something quick, under 20 minutes">⚡ quick</button>
+    <button class="chip" data-prompt="vegetarian, no meat">🥦 veggie</button>
+    <button class="chip" data-prompt="using what's almost empty in the fridge">🪣 fridge empty</button>
+    <button class="chip" data-prompt="light meal, husband watching his weight">🥗 light</button>
+    <button class="chip" data-prompt="kids will love it, one has ADHD">👦 kids ok</button>
+  </div>
+
+  <div id="text-row">
+    <input id="text-input" type="text" placeholder="I have zucchini and eggs…" autocomplete="off">
+    <button id="send-btn">→</button>
+  </div>
+
+  <div id="loader">thinking…</div>
+  <div id="error-msg"></div>
+
+  <div id="suggestions">
+    <div id="suggestions-header">
+      <span>tonight's ideas</span>
+      <button id="btn-other">other ideas ↺</button>
+    </div>
+  </div>
+
+  <div id="postmeal">
+    <h3 id="postmeal-title">How was it?</h3>
+    <div id="emoji-row">
+      <button class="emoji-btn" data-rating="loved">😍</button>
+      <button class="emoji-btn" data-rating="ok">😐</button>
+      <button class="emoji-btn" data-rating="nope">😒</button>
+    </div>
+    <div id="used-ingredients"></div>
+    <button id="btn-update-stock">✓ update stock</button>
+  </div>
+
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const state = {
+  apiKey: '',
+  stock: '',
+  lastQuery: '',
+  lastSuggestions: [],
+  chosenMeal: null,
+  activeChips: new Set(),
+};
+
+const FAMILY = `Family constraints (always apply, never override):
+- No pork, no alcohol in cooking
+- Mum: vegetarian + fish, loves seeds and fat
+- Dad (53): eats some meat, dislikes rice / peppers / chorizo, watching calories
+- Terence (14): vegetarian + fish, dislikes spinach
+- James (12, ADHD): eats everything`;
+
+// ── PERSIST ───────────────────────────────────────────────────────────────
+function load() {
+  state.apiKey = localStorage.getItem('bk_apikey') || '';
+  state.stock   = localStorage.getItem('bk_stock')  || '';
+  if (state.apiKey) document.getElementById('api-key-input').value = state.apiKey;
+  if (state.stock)  document.getElementById('stock-input').value   = state.stock;
+  updateStockBar();
+}
+function save() {
+  localStorage.setItem('bk_apikey', state.apiKey);
+  localStorage.setItem('bk_stock',  state.stock);
+}
+function updateStockBar() {
+  const el = document.getElementById('stock-preview');
+  el.textContent = state.stock
+    ? state.stock.split(',').slice(0, 5).map(s => s.trim()).join(' · ') + (state.stock.split(',').length > 5 ? ' …' : '')
+    : 'tap ⚙️ to add ingredients';
+}
+
+// ── SETTINGS ──────────────────────────────────────────────────────────────
+document.getElementById('btn-settings').addEventListener('click', () => {
+  document.getElementById('settings-panel').classList.toggle('visible');
+});
+document.getElementById('btn-save-settings').addEventListener('click', () => {
+  state.apiKey = document.getElementById('api-key-input').value.trim();
+  state.stock  = document.getElementById('stock-input').value.trim();
+  save();
+  updateStockBar();
+  document.getElementById('settings-panel').classList.remove('visible');
+});
+
+// ── CHIPS ──────────────────────────────────────────────────────────────────
+document.querySelectorAll('.chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    btn.classList.toggle('selected');
+    const p = btn.dataset.prompt;
+    state.activeChips.has(p) ? state.activeChips.delete(p) : state.activeChips.add(p);
+  });
+});
+
+// ── SPEECH ────────────────────────────────────────────────────────────────
+const micBtn   = document.getElementById('mic-btn');
+const micLabel = document.getElementById('mic-label');
+let recognition = null;
+
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'fr-FR';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = e => {
+    const text = e.results[0][0].transcript;
+    document.getElementById('text-input').value = text;
+    micBtn.classList.remove('listening');
+    micLabel.textContent = `"${text}"`;
+    askClaude(text);
+  };
+  recognition.onerror = () => {
+    micBtn.classList.remove('listening');
+    micLabel.textContent = 'tap & speak — or type below';
+  };
+  recognition.onend = () => {
+    micBtn.classList.remove('listening');
+  };
+
+  micBtn.addEventListener('click', () => {
+    if (micBtn.classList.contains('listening')) {
+      recognition.stop();
+    } else {
+      micBtn.classList.add('listening');
+      micLabel.textContent = 'listening…';
+      recognition.start();
+    }
+  });
+} else {
+  micBtn.textContent = '⌨️';
+  micLabel.textContent = 'speech not supported — type below';
+}
+
+// ── SEND ──────────────────────────────────────────────────────────────────
+document.getElementById('send-btn').addEventListener('click', () => {
+  const val = document.getElementById('text-input').value.trim();
+  if (val) askClaude(val);
+});
+document.getElementById('text-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const val = e.target.value.trim();
+    if (val) askClaude(val);
+  }
+});
+
+document.getElementById('btn-other').addEventListener('click', () => {
+  askClaude(state.lastQuery + ' — give me different ideas from the previous ones');
+});
+
+// ── ASK CLAUDE ────────────────────────────────────────────────────────────
+async function askClaude(userMessage) {
+  if (!state.apiKey) {
+    showError('Add your API key in ⚙️ settings first.');
+    return;
+  }
+
+  const chipContext = [...state.activeChips].join('; ');
+  const fullQuery = [userMessage, chipContext].filter(Boolean).join('. ');
+  state.lastQuery = fullQuery;
+
+  showLoader(true);
+  hideSuggestions();
+  hidePostmeal();
+  hideError();
+  micBtn.classList.add('thinking');
+
+  const prompt = `${FAMILY}
+
+Current stock / fridge: ${state.stock || 'unknown — suggest flexible meals'}
+
+User says: "${fullQuery}"
+
+Respond ONLY with a JSON array of exactly 3 meal suggestions. Each object:
+{
+  "title": "meal name",
+  "time": "cook time in minutes as number",
+  "notes": "one short sentence about why it fits tonight",
+  "ok_for": ["Mum","Dad","Terence","James"],
+  "ingredients_needed": ["ingredient1","ingredient2"]
+}
+
+Rules:
+- Respect ALL family constraints
+- Prefer ingredients already in stock
+- Keep notes under 12 words
+- Return ONLY the JSON array, no other text`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': state.apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 800,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!res.ok) throw new Error(`API ${res.status}`);
+    const data = await res.json();
+    const text = data.content[0].text.trim();
+    const clean = text.replace(/```json|```/g, '').trim();
+    const meals = JSON.parse(clean);
+    state.lastSuggestions = meals;
+    showSuggestions(meals);
+  } catch (err) {
+    showError('Something went wrong: ' + err.message);
+  } finally {
+    showLoader(false);
+    micBtn.classList.remove('thinking');
+    micLabel.textContent = 'tap & speak — or type below';
+    document.getElementById('text-input').value = '';
+  }
+}
+
+// ── RENDER SUGGESTIONS ────────────────────────────────────────────────────
+function showSuggestions(meals) {
+  const container = document.getElementById('suggestions');
+  // remove old cards
+  container.querySelectorAll('.suggestion').forEach(el => el.remove());
+
+  meals.forEach((meal, i) => {
+    const el = document.createElement('div');
+    el.className = 'suggestion';
+    el.innerHTML = `
+      <span class="s-ok">${meal.ok_for.join(' · ')}</span>
+      <div class="s-title">${meal.title}</div>
+      <div class="s-meta">${meal.time} min &nbsp;·&nbsp; ${meal.notes}</div>
+    `;
+    el.addEventListener('click', () => chooseMeal(meal));
+    container.appendChild(el);
+  });
+
+  container.classList.add('visible');
+}
+function hideSuggestions() {
+  document.getElementById('suggestions').classList.remove('visible');
+}
+
+// ── CHOOSE MEAL ───────────────────────────────────────────────────────────
+function chooseMeal(meal) {
+  state.chosenMeal = meal;
+  hideSuggestions();
+  document.getElementById('postmeal-title').textContent = `${meal.title} — how was it?`;
+  document.getElementById('used-ingredients').textContent =
+    'Used: ' + (meal.ingredients_needed || []).join(', ');
+  document.getElementById('postmeal').classList.add('visible');
+}
+
+// ── POST-MEAL ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.emoji-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const rating = btn.dataset.rating;
+    saveFeedback(state.chosenMeal, rating);
+    btn.style.transform = 'scale(1.4)';
+    setTimeout(() => { btn.style.transform = ''; }, 300);
+  });
+});
+
+document.getElementById('btn-update-stock').addEventListener('click', () => {
+  if (!state.chosenMeal) return;
+  const used = state.chosenMeal.ingredients_needed || [];
+  if (used.length && state.stock) {
+    let stockArr = state.stock.split(',').map(s => s.trim().toLowerCase());
+    used.forEach(u => {
+      stockArr = stockArr.filter(s => !s.includes(u.toLowerCase()));
+    });
+    state.stock = stockArr.join(', ');
+    document.getElementById('stock-input').value = state.stock;
+    save();
+    updateStockBar();
+  }
+  hidePostmeal();
+  showDone();
+});
+
+function saveFeedback(meal, rating) {
+  const history = JSON.parse(localStorage.getItem('bk_history') || '[]');
+  history.push({ date: new Date().toISOString(), meal: meal.title, rating });
+  localStorage.setItem('bk_history', JSON.stringify(history.slice(-50)));
+}
+
+function hidePostmeal() {
+  document.getElementById('postmeal').classList.remove('visible');
+}
+
+function showDone() {
+  micLabel.textContent = '✓ stock updated — ready for next time';
+  setTimeout(() => { micLabel.textContent = 'tap & speak — or type below'; }, 3000);
+}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function showLoader(on) {
+  document.getElementById('loader').classList.toggle('visible', on);
+}
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.classList.add('visible');
+}
+function hideError() {
+  document.getElementById('error-msg').classList.remove('visible');
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────
+load();
+</script>
+</body>
+</html>
