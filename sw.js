@@ -4,7 +4,7 @@ const ASSETS = [
   '/brainrot-kitchen/index.html',
   '/brainrot-kitchen/manifest.json',
   '/brainrot-kitchen/icon-192.png',
-  '/brainrot-kitchen/icon-512.png'
+  '/brainrot-kitchen/icon-main.png'
 ];
 
 self.addEventListener('install', e => {
