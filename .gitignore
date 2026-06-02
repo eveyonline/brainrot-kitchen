@@ -8,6 +8,7 @@ lerna-debug.log*
 
 # API Key
 config.local.js
+v3/config.local.js
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json

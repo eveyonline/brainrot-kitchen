@@ -15,14 +15,13 @@ const FAMILY = `Family constraints (always apply, never override):
 - James (12, ADHD): eats everything`;
 
 function load() {
-  state.apiKey = localStorage.getItem('bk_apikey') || '';
+  state.apiKey = window.BRAINROT_CONFIG?.GEMINI_API_KEY || '';
   state.stock   = localStorage.getItem('bk_stock')  || '';
   if (state.apiKey) document.getElementById('api-key-input').value = state.apiKey;
   if (state.stock)  document.getElementById('stock-input').value   = state.stock;
   updateStockBar();
 }
 function save() {
-  localStorage.setItem('bk_apikey', state.apiKey);
   localStorage.setItem('bk_stock',  state.stock);
 }
 function updateStockBar() {
@@ -67,7 +66,7 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     document.getElementById('text-input').value = text;
     micBtn.classList.remove('listening');
     micLabel.textContent = `"${text}"`;
-    askClaude(text);
+    askGemini(text);
   };
   recognition.onerror = () => {
     micBtn.classList.remove('listening');
@@ -93,20 +92,20 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
 
 document.getElementById('send-btn').addEventListener('click', () => {
   const val = document.getElementById('text-input').value.trim();
-  if (val) askClaude(val);
+  if (val) askGemini(val);
 });
 document.getElementById('text-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') {
     const val = e.target.value.trim();
-    if (val) askClaude(val);
+    if (val) askGemini(val);
   }
 });
 
 document.getElementById('btn-other').addEventListener('click', () => {
-  askClaude(state.lastQuery + ' — give me different ideas from the previous ones');
+  askGemini(state.lastQuery + ' — give me different ideas from the previous ones');
 });
 
-async function askClaude(userMessage) {
+async function askGemini(userMessage) {
   if (!state.apiKey) {
     showError('Add your API key in settings first.');
     return;
@@ -143,20 +142,38 @@ Rules:
 - Keep notes under 12 words
 - Return ONLY the JSON array, no other text`;
 
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+try {
+  const res = await fetch(
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
+    {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': state.apiKey, 'anthropic-version': '2023-06-01' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': state.apiKey
+      },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 800,
-        messages: [{ role: 'user', content: prompt }]
+        contents: [
+          {
+            parts: [{ text: prompt }]
+          }
+        ],
+        generationConfig: {
+          temperature: 0.2,
+          maxOutputTokens: 2048,
+          responseMimeType: "application/json"
+        }
       })
-    });
+    }
+  );
 
     if (!res.ok) throw new Error(`API ${res.status}`);
     const data = await res.json();
-    const text = data.content[0].text.trim();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+    if (!text) {
+      throw new Error('Réponse Gemini vide ou invalide');
+    }
+
     const clean = text.replace(/```json|```/g, '').trim();
     const meals = JSON.parse(clean);
     state.lastSuggestions = meals;
