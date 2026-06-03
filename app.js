@@ -143,39 +143,18 @@ Rules:
 - Return ONLY the JSON array, no other text`;
 
 try {
-  const res = await fetch(
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': state.apiKey
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [{ text: prompt }]
-          }
-        ],
-        generationConfig: {
-          temperature: 0.2,
-          maxOutputTokens: 2048,
-          responseMimeType: "application/json"
-        }
-      })
-    }
-  );
+    const res = await fetch('/api/recipes', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ prompt }),
+  });
 
-    if (!res.ok) throw new Error(`API ${res.status}`);
-    const data = await res.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+  if (!res.ok) throw new Error(`API ${res.status}`);
 
-    if (!text) {
-      throw new Error('Réponse Gemini vide ou invalide');
-    }
+  const meals = await res.json();
 
-    const clean = text.replace(/```json|```/g, '').trim();
-    const meals = JSON.parse(clean);
     state.lastSuggestions = meals;
     showSuggestions(meals);
   } catch (err) {

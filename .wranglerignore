@@ -1,0 +1,7 @@
+.git/**
+.wrangler/**
+worker/**
+archive/**
+config.local.js
+wrangler.toml
+.assetsignore
