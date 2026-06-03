@@ -1,24 +1,11 @@
- {
+{
   "name": "brainrot-kitchen",
-  "short_name": "🧠 Kitchen",
-  "description": "Menus, stock, courses — dump your mental family overload",
-  "start_url": "/brainrot-kitchen/",
+  "short_name": "Brainrot Kitchen",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f0f1a",
-  "theme_color": "#1a1a2e",
-  "orientation": "portrait",
+  "background_color": "#151018",
+  "theme_color": "#28b9ff",
   "icons": [
-    {
-      "src": "icon-main.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-main.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    { "src": "assets/icon-main.png", "sizes": "512x512", "type": "image/png" }
   ]
 }

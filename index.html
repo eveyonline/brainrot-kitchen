@@ -1,2 +1,81 @@
 <!DOCTYPE html>
-<meta http-equiv="refresh" content="0; url=v3/">
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>brainrot-kitchen</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="assets/icon-main.png">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.local.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+<div id="app-shell">
+  <div id="header">
+    <span class="brand"><a href="./"><img class="brand-icon" src="assets/icons/icon-main.png" alt=""></a><span>brainrot<small>kitchen</small></span></span>
+    <button id="btn-settings" title="Settings" aria-label="Settings"><span class="pixel-gear"></span></button>
+  </div>
+
+  <div id="stock-bar">
+    <span>stock:</span> <b id="stock-preview">tap settings to add ingredients</b>
+  </div>
+
+  <div id="settings-panel">
+    <label>Anthropic API key</label>
+    <input id="api-key-input" type="password" placeholder="sk-ant-...">
+    <label>What's in the fridge / shelves</label>
+    <textarea id="stock-input" placeholder="eggs, pasta, zucchini, feta, canned tomatoes, rice, tofu, pesto..."></textarea>
+    <button id="btn-save-settings">Save</button>
+  </div>
+
+  <div id="main">
+    <section id="hero-card">
+      <!--<img class="hero-icon" src="assets/icons/icon-cook.png" alt="Brainrot Kitchen chef icon"> -->
+      <button id="mic-btn" aria-label="Ask what to cook"><span class="pixel-mic"></span></button>
+      <div id="mic-label">tap &amp; speak — or type below</div>
+
+      <div id="chips">
+        <button class="chip" data-prompt="something quick, under 20 minutes"><span class="pixel-zap"></span> quick</button>
+        <button class="chip" data-prompt="vegetarian, no meat"><span class="pixel-broccoli"></span> veggie</button>
+        <button class="chip" data-prompt="using what's almost empty in the fridge"><span class="pixel-bucket"></span> fridge empty</button>
+        <button class="chip" data-prompt="light meal, husband watching his weight"><span class="pixel-salad"></span> light</button>
+        <button class="chip" data-prompt="kids will love it, one has ADHD"><span class="pixel-kid"></span> kids ok</button>
+      </div>
+    </section>
+
+    <section id="app-modes" aria-label="Main actions">
+      <article class="mode-card"><img src="assets/icons/icon-dump.png" alt=""><span>Cook ideas</span></article>
+      <article class="mode-card"><img src="assets/icons/icon-groceries.png" alt=""><span>Shopping list</span></article>
+      <article class="mode-card"><img src="assets/icons/icon-duo.png" alt=""><span>Recipe memory</span></article>
+    </section>
+
+    <div id="text-row">
+      <input id="text-input" type="text" placeholder="I have zucchini and eggs…" autocomplete="off">
+      <button id="send-btn" aria-label="Send"><span class="pixel-arrow"></span></button>
+    </div>
+
+    <div id="loader">thinking…</div>
+    <div id="error-msg"></div>
+
+    <div id="suggestions">
+      <div id="suggestions-header">
+        <span>tonight's ideas</span>
+        <button id="btn-other"><span class="pixel-retry"></span> other ideas</button>
+      </div>
+    </div>
+
+    <div id="postmeal">
+      <h3 id="postmeal-title">How was it?</h3>
+      <div id="emoji-row">
+        <button class="emoji-btn" data-rating="loved" aria-label="Loved"><span class="pixel-love"></span></button>
+        <button class="emoji-btn" data-rating="ok" aria-label="OK"><span class="pixel-ok"></span></button>
+        <button class="emoji-btn" data-rating="nope" aria-label="Nope"><span class="pixel-nope"></span></button>
+      </div>
+      <div id="used-ingredients"></div>
+      <button id="btn-update-stock"><span class="pixel-check"></span> update stock</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
