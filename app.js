@@ -1,5 +1,4 @@
 const state = {
-  apiKey: '',
   stock: '',
   lastQuery: '',
   lastSuggestions: [],
@@ -15,9 +14,7 @@ const FAMILY = `Family constraints (always apply, never override):
 - James (12, ADHD): eats everything`;
 
 function load() {
-  state.apiKey = window.BRAINROT_CONFIG?.GEMINI_API_KEY || '';
   state.stock   = localStorage.getItem('bk_stock')  || '';
-  if (state.apiKey) document.getElementById('api-key-input').value = state.apiKey;
   if (state.stock)  document.getElementById('stock-input').value   = state.stock;
   updateStockBar();
 }
@@ -35,7 +32,6 @@ document.getElementById('btn-settings').addEventListener('click', () => {
   document.getElementById('settings-panel').classList.toggle('visible');
 });
 document.getElementById('btn-save-settings').addEventListener('click', () => {
-  state.apiKey = document.getElementById('api-key-input').value.trim();
   state.stock  = document.getElementById('stock-input').value.trim();
   save();
   updateStockBar();
