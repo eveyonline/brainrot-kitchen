@@ -1,12 +1,12 @@
-const CACHE = 'brainrot-kitchen-v1';
-const ASSETS = [
-  '/brainrot-kitchen/',
-  '/brainrot-kitchen/index.html',
-  '/brainrot-kitchen/manifest.json',
-  '/brainrot-kitchen/icon-192.png',
-  '/brainrot-kitchen/icon-main.png'
-];
+const CACHE = 'brainrot-kitchen-v2';
 
+const ASSETS = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/icon-192.png',
+  '/icon-main.png'
+];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
 });
