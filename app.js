@@ -106,10 +106,6 @@ document.getElementById('btn-other').addEventListener('click', () => {
 });
 
 async function askGemini(userMessage) {
-  if (!state.apiKey) {
-    showError('Add your API key in settings first.');
-    return;
-  }
 
   const chipContext = [...state.activeChips].join('; ');
   const fullQuery = [userMessage, chipContext].filter(Boolean).join('. ');
