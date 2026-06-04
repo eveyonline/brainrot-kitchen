@@ -135,7 +135,7 @@ Rules:
 - Return ONLY the JSON array, no other text`;
 
 try {
-    const res = await fetch('/api/recipes', {
+    const res = await fetch('https://brainrot-kitchen.eve-vinclair.workers.dev/api/recipes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

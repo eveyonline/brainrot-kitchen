@@ -2,6 +2,13 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    if (url.pathname === '/api/recipes' && request.method === 'OPTIONS') {
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders(),
+      });
+    }
+
     if (url.pathname === '/api/recipes' && request.method === 'POST') {
       return handleRecipes(request, env);
     }
@@ -70,5 +77,15 @@ async function handleRecipes(request, env) {
   const clean = text.replace(/```json|```/g, '').trim();
   const meals = JSON.parse(clean);
 
-  return Response.json(meals);
+  return Response.json(meals, {
+    headers: corsHeaders(),
+  });
+}
+
+function corsHeaders() {
+  return {
+    'Access-Control-Allow-Origin': 'https://eveyonline.github.io',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  };
 }
