@@ -13,6 +13,39 @@ const FAMILY = `Family constraints (always apply, never override):
 - Terence (14): vegetarian + fish, dislikes spinach
 - James (12, ADHD): eats everything`;
 
+const ERROR_CONTENTS = {
+  AI_SERVICE_UNAVAILABLE: {
+    icon: 'assets/icons/errors/ai-unavailable.png',
+    title: 'THE BRAINROT CHEF IS TAKING A POWER NAP',
+    message: 'Impossible de générer une recette pour le moment. Le chef est parti méditer sur une tomate.',
+  },
+  AI_RATE_LIMITED: {
+    icon: 'assets/icons/errors/rate-limited.png',
+    title: 'TOO MANY COOKS IN THE KITCHEN',
+    message: 'Le chef reçoit trop de commandes en même temps. Réessaie dans quelques minutes.',
+  },
+  NETWORK_ERROR: {
+    icon: 'assets/icons/errors/no-connection.png',
+    title: 'THE FRIDGE LOST WIFI',
+    message: 'Impossible de contacter la cuisine. Vérifie ta connexion internet.',
+  },
+  TIMEOUT: {
+    icon: 'assets/icons/errors/timeout.png',
+    title: 'THE SOUP IS STILL LOADING',
+    message: 'La génération prend plus de temps que prévu. Tu peux réessayer.',
+  },
+  AI_EMPTY_RESPONSE: {
+    icon: 'assets/icons/errors/empty-response.png',
+    title: 'THE CHEF FORGOT HOW TO COOK',
+    message: 'Les ingrédients ont été compris. L’inspiration, beaucoup moins.',
+  },
+  APP_ERROR: {
+    icon: 'assets/icons/errors/server-error.png',
+    title: 'THE KITCHEN IS CONFUSED',
+    message: 'Brainrot Kitchen a rencontré un problème inattendu. Réessaie dans quelques instants.',
+  },
+};
+
 function load() {
   state.stock   = localStorage.getItem('bk_stock')  || '';
   if (state.stock)  document.getElementById('stock-input').value   = state.stock;
@@ -150,7 +183,7 @@ try {
     state.lastSuggestions = meals;
     showSuggestions(meals);
   } catch (err) {
-    showError('Something went wrong: ' + err.message);
+      showError(getErrorCode(err));
   } finally {
     showLoader(false);
     micBtn.classList.remove('thinking');
@@ -225,9 +258,32 @@ function showDone() {
   setTimeout(() => { micLabel.textContent = 'tap & speak — or type below'; }, 3000);
 }
 function showLoader(on) { document.getElementById('loader').classList.toggle('visible', on); }
-function showError(msg) {
+
+function getErrorCode(err) {
+  if (!navigator.onLine) return 'NETWORK_ERROR';
+
+  if (err.message === 'API 429') return 'AI_RATE_LIMITED';
+  if (err.message === 'API 502') return 'AI_SERVICE_UNAVAILABLE';
+  if (err.message === 'API 504') return 'TIMEOUT';
+
+  return 'APP_ERROR';
+}
+
+function showError(code = 'APP_ERROR') {
+  const error = ERROR_CONTENTS[code] || ERROR_CONTENTS.APP_ERROR;
   const el = document.getElementById('error-msg');
-  el.textContent = msg;
+
+  el.innerHTML = `
+    <img class="error-icon" src="${error.icon}" alt="" />
+    <h2>${error.title}</h2>
+    <p>${error.message}</p>
+    <button type="button" id="retry-button">Retry</button>
+  `;
+
+  document.getElementById('retry-button').addEventListener('click', () => {
+    if (state.lastQuery) askGemini(state.lastQuery);
+  });
+
   el.classList.add('visible');
 }
 function hideError() { document.getElementById('error-msg').classList.remove('visible'); }

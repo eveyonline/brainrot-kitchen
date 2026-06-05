@@ -368,3 +368,22 @@
 .mode-card img { width: 62px; height: 62px; object-fit: contain; display: block; margin: 0 auto 4px; }
 .mode-card span { display: block; color: white; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .02em; text-shadow: 2px 2px 0 var(--black); }
 @media (max-width: 360px) { .hero-icon { width: 112px; height: 112px; } .mode-card img { width: 52px; height: 52px; } }
+
+#error-msg {
+  text-align: center;
+}
+
+.error-icon {
+  width: 120px;
+  image-rendering: pixelated;
+  margin-bottom: 1rem;
+}
+
+#error-msg h2 {
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+
+#error-msg p {
+  margin: 0.75rem 0 1rem;
+}

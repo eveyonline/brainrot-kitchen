@@ -147,3 +147,4 @@ vite.config.ts.timestamp-*
 .vite/
 
 .wrangler/
+assets/icons/errors/*-256.png

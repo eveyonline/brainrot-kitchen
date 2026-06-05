@@ -5,7 +5,7 @@ export default {
     if (url.pathname === '/api/recipes' && request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
-        headers: corsHeaders(),
+        headers: corsHeaders(request),
       });
     }
 
@@ -36,7 +36,7 @@ async function handleRecipes(request, env) {
       { error: 'Missing prompt' },
       { 
         status: 400,
-        headers: corsHeaders(), 
+        headers: corsHeaders(request), 
       }
     );
   }
@@ -69,7 +69,7 @@ async function handleRecipes(request, env) {
     { error: `Gemini API ${geminiRes.status}` },
       {
         status: 502,
-        headers: corsHeaders(),
+        headers: corsHeaders(request),
       }
     );
   }
@@ -82,7 +82,7 @@ async function handleRecipes(request, env) {
       { error: 'Empty Gemini response' },
       { 
         status: 502,
-        headers: corsHeaders(),
+        headers: corsHeaders(request),
       }
     );
   }
@@ -97,19 +97,28 @@ async function handleRecipes(request, env) {
       { error: 'Invalid Gemini JSON response' },
       {
         status: 502,
-        headers: corsHeaders(),
+        headers: corsHeaders(request),
       }
     );
   }
 
   return Response.json(meals, {
-    headers: corsHeaders(),
+    headers: corsHeaders(request),
   });
 }
 
-function corsHeaders() {
+function corsHeaders(request) {
+  const allowedOrigins = [
+    'https://eveyonline.github.io',
+    'http://localhost:8000',
+  ];
+
+  const origin = request.headers.get('Origin');
+
   return {
-    'Access-Control-Allow-Origin': 'https://eveyonline.github.io',
+    'Access-Control-Allow-Origin': allowedOrigins.includes(origin)
+      ? origin
+      : 'https://eveyonline.github.io',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
