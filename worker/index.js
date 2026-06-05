@@ -21,7 +21,11 @@ async function handleRecipes(request, env) {
   if (!env.GEMINI_API_KEY) {
     return Response.json(
       { error: 'Missing GEMINI_API_KEY secret' },
-      { status: 500 }
+      { 
+        status: 502,
+        headers: corsHeaders(), 
+      }
+
     );
   }
 
@@ -30,7 +34,10 @@ async function handleRecipes(request, env) {
   if (!prompt) {
     return Response.json(
       { error: 'Missing prompt' },
-      { status: 400 }
+      { 
+        status: 400,
+        headers: corsHeaders(), 
+      }
     );
   }
 
@@ -59,8 +66,11 @@ async function handleRecipes(request, env) {
 
   if (!geminiRes.ok) {
     return Response.json(
-      { error: `Gemini API ${geminiRes.status}` },
-      { status: 502 }
+    { error: `Gemini API ${geminiRes.status}` },
+      {
+        status: 502,
+        headers: corsHeaders(),
+      }
     );
   }
 
@@ -70,12 +80,27 @@ async function handleRecipes(request, env) {
   if (!text) {
     return Response.json(
       { error: 'Empty Gemini response' },
-      { status: 502 }
+      { 
+        status: 502,
+        headers: corsHeaders(),
+      }
     );
   }
 
   const clean = text.replace(/```json|```/g, '').trim();
-  const meals = JSON.parse(clean);
+  let meals;
+
+  try {
+    meals = JSON.parse(clean);
+  } catch (error) {
+    return Response.json(
+      { error: 'Invalid Gemini JSON response' },
+      {
+        status: 502,
+        headers: corsHeaders(),
+      }
+    );
+  }
 
   return Response.json(meals, {
     headers: corsHeaders(),
