@@ -69,20 +69,20 @@
     #header .brand {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 16px;
       color: white;
       font-weight: 1000;
       letter-spacing: .5px;
       text-transform: uppercase;
       text-shadow: 3px 3px 0 var(--black);
       line-height: .95;
-      font-size: 20px;
+      font-size: 27px;
     }
 
     #header .brand small {
       display: block;
       color: var(--yellow);
-      font-size: 16px;
+      font-size: 20px;
     }
 
     .pixel-badge {
@@ -367,7 +367,17 @@
     }
 
 /* === GENERATED ICON ASSETS === */
-.brand-icon { width: 48px; height: 48px; image-rendering: auto; border: 3px solid var(--black); border-radius: 14px; background: white; object-fit: cover; box-shadow: 3px 3px 0 var(--black); }
+.brand-icon {
+  width: 64px;
+  height: 64px;
+  image-rendering: auto;
+  border: 3px solid var(--black);
+  border-radius: 16px;
+  background: white;
+  object-fit: cover;
+  box-shadow: 3px 3px 0 var(--black);
+  transform: scale(1.18);
+}
 .hero-icon { width: 132px; height: 132px; object-fit: contain; margin: -2px auto 8px; display: block; filter: drop-shadow(5px 5px 0 var(--black)); }
 #app-modes { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
 .mode-card { background: var(--panel); border: var(--border); border-radius: 18px; box-shadow: 4px 4px 0 var(--black); padding: 8px 6px 7px; text-align: center; transform: rotate(.4deg); }
