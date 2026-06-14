@@ -41,6 +41,21 @@ async function handleRecipes(request, env) {
     );
   }
 
+  const acceptLanguage = request.headers.get('Accept-Language') || 'fr-FR';
+
+  const finalPrompt = `
+    ${prompt}
+
+    Contrainte supplémentaire importante :
+    - Réponds dans la langue préférée de l'utilisateur.
+    - Langue préférée détectée : ${acceptLanguage}
+    - Si la langue n'est pas claire, réponds en français.
+    - Garde exactement le format JSON demandé.
+    - Ne traduis jamais les clés JSON.
+    - Traduis uniquement les valeurs affichées à l'utilisateur : titres, descriptions, ingrédients et étapes.
+    - Ne mets aucun texte avant ou après le JSON.
+  `;
+
   const geminiRes = await fetch(
     'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent',
     {
@@ -52,7 +67,7 @@ async function handleRecipes(request, env) {
       body: JSON.stringify({
         contents: [
           {
-            parts: [{ text: prompt }],
+            parts: [{ text: finalPrompt }],
           },
         ],
         generationConfig: {
