@@ -61,9 +61,13 @@ function updateStockBar() {
     : 'tap settings to add ingredients';
 }
 
-document.getElementById('btn-settings').addEventListener('click', () => {
+function toggleSettingsPanel() {
   document.getElementById('settings-panel').classList.toggle('visible');
-});
+}
+
+document.getElementById('btn-settings').addEventListener('click', toggleSettingsPanel);
+document.getElementById('stock-bar').addEventListener('click', toggleSettingsPanel);
+
 document.getElementById('btn-save-settings').addEventListener('click', () => {
   state.stock  = document.getElementById('stock-input').value.trim();
   save();

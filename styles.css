@@ -140,19 +140,27 @@
     .pixel-gear::after { content:""; position:absolute; inset:8px; background:var(--yellow); }
 
     #stock-bar {
-      margin-top: 14px;
-      padding: 12px 14px;
+      width: 100%;
+      margin-top: 8px;
+      padding: 9px 12px;
       background: var(--panel);
       border: var(--border);
-      border-radius: 16px;
-      box-shadow: 4px 4px 0 var(--black);
+      border-radius: 14px;
+      box-shadow: 3px 3px 0 var(--black);
+      font: inherit;
       font-size: 13px;
       color: var(--muted);
       display: flex;
       gap: 8px;
       align-items: center;
+      cursor: pointer;
+      text-align: left;
     }
-    #stock-bar b { color: var(--yellow); font-weight: 900; }
+
+    #stock-bar b {
+      color: var(--yellow);
+      font-weight: 900;
+    }
 
     #settings-panel {
       display: none;
