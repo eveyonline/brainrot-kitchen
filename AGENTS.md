@@ -6,7 +6,7 @@ Brainrot Kitchen est une PWA simple hébergée sur GitHub Pages.
 
 Elle utilise un Cloudflare Worker pour appeler Gemini et générer des idées de repas.
 
-## Architecture actuelle
+## Architecture
 
 * Frontend : GitHub Pages
 * API Worker : `https://brainrot-kitchen.eve-vinclair.workers.dev/api/recipes`
@@ -19,16 +19,29 @@ CORS autorisé pour :
 * `https://eveyonline.github.io`
 * `http://localhost:8000`
 
+## Rôle de ce fichier
+
+Ce fichier contient les règles stables du projet pour les agents IA.
+
+L’état courant du projet, les décisions récentes, les tentatives annulées et les prochaines étapes doivent être tenus à jour dans :
+
+```txt
+PROJECT_STATE.md
+```
+
+Avant de proposer une modification, lire aussi `PROJECT_STATE.md` si le fichier existe.
+
 ## Objectif produit
 
 L’application doit rester simple, mobile-friendly et compréhensible.
 
-Priorité actuelle :
+Priorités générales :
 
 * stabilité ;
 * génération correcte ;
 * langue adaptée ;
-* expérience utilisateur claire.
+* expérience utilisateur claire ;
+* progression par petites étapes.
 
 ## Méthode de travail
 
@@ -49,8 +62,8 @@ Privilégier :
 * changements multiples simultanés ;
 * régénération complète du projet ;
 * frameworks ajoutés sans nécessité ;
-* base de données pour l’instant ;
-* grosse bibliothèque de recettes maintenant.
+* base de données sans besoin clair ;
+* grosse bibliothèque de recettes trop tôt.
 
 ## Avant toute modification
 
@@ -59,6 +72,8 @@ Toujours indiquer :
 * pourquoi le changement est proposé ;
 * le risque éventuel ;
 * les fichiers concernés.
+
+Ne pas modifier plusieurs zones du projet en même temps si ce n’est pas nécessaire.
 
 ## Règles Gemini / JSON
 
@@ -70,6 +85,33 @@ Le prompt envoyé à Gemini doit :
 * ne jamais traduire les clés JSON ;
 * ne traduire que les valeurs visibles par l’utilisateur : titres, descriptions, ingrédients, étapes ;
 * ne rien ajouter avant ou après le JSON.
+
+Si Gemini renvoie une réponse non valide, privilégier d’abord :
+
+* une amélioration ciblée du prompt ;
+* une validation/parsing plus robuste côté Worker ;
+* un message d’erreur clair côté frontend.
+
+Ne pas refactorer tout le frontend pour corriger un problème de réponse JSON.
+
+## Sécurité
+
+Ne jamais commiter :
+
+* secrets ;
+* tokens ;
+* clés API ;
+* fichiers locaux sensibles ;
+* contenu de `.wrangler` si non prévu ;
+* variables d’environnement privées.
+
+Le secret Cloudflare attendu est :
+
+```txt
+GEMINI_API_KEY
+```
+
+Il doit rester géré côté Cloudflare, pas dans le dépôt Git.
 
 ## Git et déploiement
 
