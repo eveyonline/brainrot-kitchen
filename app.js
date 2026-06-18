@@ -7,11 +7,11 @@ const state = {
 };
 
 const FAMILY = `Family constraints (always apply, never override):
-- No pork, no alcohol in cooking
-- Mum: vegetarian + fish, loves seeds and fat
-- Dad (53): eats some meat, dislikes rice / peppers / chorizo, watching calories
-- Terence (14): vegetarian + fish, dislikes spinach
-- James (12, ADHD): eats everything`;
+  - No pork, no alcohol in cooking
+  - Mum: vegetarian by default, fish only when explicitly allowed, loves seeds and fat
+  - Dad (53): eats some meat, dislikes rice / peppers / chorizo, watching calories
+  - Terence (14): vegetarian by default, fish only when explicitly allowed, dislikes spinach
+  - James (12, ADHD): eats everything`;
 
 const ERROR_CONTENTS = {
   AI_SERVICE_UNAVAILABLE: {
@@ -167,9 +167,20 @@ Respond ONLY with a JSON array of exactly 3 meal suggestions. Each object:
 
 Rules:
 - Respect ALL family constraints
+- Meals must be strictly vegetarian by default: no meat, no fish, no seafood, unless the user explicitly asks for fish or the "fish is allowed for this meal" chip is active
+- Meals are family-friendly by default
+- Avoid shopping by default: prefer common pantry, fridge or freezer ingredients
+- Meals must be low-effort and realistic for a weekday evening
+- Meals must take no more than 40 minutes total
+- Prefer Thermomix-friendly ideas first when relevant, but do not force every recipe to require a Thermomix
 - Prefer ingredients already in stock
 - Keep notes under 12 words
-- Return ONLY the JSON array, no other text`;
+- Return ONLY the JSON array, no other text
+- Do not use markdown
+- Do not wrap the JSON in code fences
+- Use double quotes for all JSON strings
+- Do not add trailing commas
+- "time" must be a number, not a string`;
 
 try {
     const res = await fetch('https://brainrot-kitchen.eve-vinclair.workers.dev/api/recipes', {
