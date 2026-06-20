@@ -1,172 +1,194 @@
-# AGENTS.md
+        # AGENTS.md
 
-## Projet
+        ## Projet
 
-Brainrot Kitchen est une PWA simple hébergée sur GitHub Pages.
+        Brainrot Kitchen est une PWA simple hébergée sur GitHub Pages.
 
-Elle utilise un Cloudflare Worker pour appeler Gemini et générer des idées de repas.
+        Elle utilise un Cloudflare Worker pour appeler Gemini et générer des idées de repas.
 
-## Architecture
+        ## Architecture
 
-* Frontend : GitHub Pages
-* API Worker : `https://brainrot-kitchen.eve-vinclair.workers.dev/api/recipes`
-* Endpoint : `POST /api/recipes`
-* Modèle Gemini : `gemini-2.5-flash`
-* Secret Cloudflare : `GEMINI_API_KEY`
+        * Frontend : GitHub Pages
+        * API Worker : `https://brainrot-kitchen.eve-vinclair.workers.dev/api/recipes`
+        * Endpoint : `POST /api/recipes`
+        * Modèle Gemini : `gemini-2.5-flash`
+        * Secret Cloudflare : `GEMINI_API_KEY`
 
-CORS autorisé pour :
+        CORS autorisé pour :
 
-* `https://eveyonline.github.io`
-* `http://localhost:8000`
+        * `https://eveyonline.github.io`
+        * `http://localhost:8000`
 
-## Rôle de ce fichier
+        ## Rôle de ce fichier
 
-Ce fichier contient les règles stables du projet pour les agents IA.
+        Ce fichier contient les règles stables du projet pour les agents IA.
 
-L’état courant du projet, les décisions récentes, les tentatives annulées et les prochaines étapes doivent être tenus à jour dans :
+        L’état courant du projet, les décisions récentes, les tentatives annulées et les prochaines étapes doivent être tenus à jour dans :
 
-```txt
-PROJECT_STATE.md
-```
+        ```txt
+        PROJECT_STATE.md
+        ```
 
-Avant de proposer une modification, lire aussi `PROJECT_STATE.md` si le fichier existe.
+        Avant de proposer une modification, lire aussi `PROJECT_STATE.md` si le fichier existe.
 
-## Objectif produit
+        ## Objectif produit
 
-L’application doit rester simple, mobile-friendly et compréhensible.
+        L’application doit rester simple, mobile-friendly et compréhensible.
 
-Priorités générales :
+        Priorités générales :
 
-* stabilité ;
-* génération correcte ;
-* langue adaptée ;
-* expérience utilisateur claire ;
-* progression par petites étapes.
+        * stabilité ;
+        * génération correcte ;
+        * langue adaptée ;
+        * expérience utilisateur claire ;
+        * progression par petites étapes.
 
-## Méthode de travail
+        ## Méthode de travail
 
-Travailler en mode MVP/agile.
+        Travailler en mode MVP/agile.
 
-Privilégier :
+        Privilégier :
 
-* une étape à la fois ;
-* petits commits ;
-* changements ciblés ;
-* explication des risques ;
-* compréhension avant exécution ;
-* stabilité avant nouvelles fonctionnalités.
+        * une étape à la fois ;
+        * petits commits ;
+        * changements ciblés ;
+        * explication des risques ;
+        * compréhension avant exécution ;
+        * stabilité avant nouvelles fonctionnalités.
 
-Éviter :
+        Éviter :
 
-* grosses refontes ;
-* changements multiples simultanés ;
-* régénération complète du projet ;
-* frameworks ajoutés sans nécessité ;
-* base de données sans besoin clair ;
-* grosse bibliothèque de recettes trop tôt.
+        * grosses refontes ;
+        * changements multiples simultanés ;
+        * régénération complète du projet ;
+        * frameworks ajoutés sans nécessité ;
+        * base de données sans besoin clair ;
+        * grosse bibliothèque de recettes trop tôt.
 
-## Avant toute modification
+        ## Avant toute modification
 
-Toujours indiquer :
+        Toujours indiquer :
 
-* pourquoi le changement est proposé ;
-* le risque éventuel ;
-* les fichiers concernés.
+        * pourquoi le changement est proposé ;
+        * le risque éventuel ;
+        * les fichiers concernés.
 
-Ne pas modifier plusieurs zones du projet en même temps si ce n’est pas nécessaire.
+        Ne pas modifier plusieurs zones du projet en même temps si ce n’est pas nécessaire.
 
-## Règles Gemini / JSON
+        ## Règles Gemini / JSON
 
-Le prompt envoyé à Gemini doit :
+        Le prompt envoyé à Gemini doit :
 
-* respecter la langue du navigateur ou du smartphone si possible ;
-* utiliser le français par défaut si la langue n’est pas claire ;
-* garder exactement le format JSON attendu ;
-* ne jamais traduire les clés JSON ;
-* ne traduire que les valeurs visibles par l’utilisateur : titres, descriptions, ingrédients, étapes ;
-* ne rien ajouter avant ou après le JSON.
+        * respecter la langue du navigateur ou du smartphone si possible ;
+        * utiliser le français par défaut si la langue n’est pas claire ;
+        * garder exactement le format JSON attendu ;
+        * ne jamais traduire les clés JSON ;
+        * ne traduire que les valeurs visibles par l’utilisateur : titres, descriptions, ingrédients, étapes ;
+        * ne rien ajouter avant ou après le JSON.
 
-Si Gemini renvoie une réponse non valide, privilégier d’abord :
+        Si Gemini renvoie une réponse non valide, privilégier d’abord :
 
-* une amélioration ciblée du prompt ;
-* une validation/parsing plus robuste côté Worker ;
-* un message d’erreur clair côté frontend.
+        * une amélioration ciblée du prompt ;
+        * une validation/parsing plus robuste côté Worker ;
+        * un message d’erreur clair côté frontend.
 
-Ne pas refactorer tout le frontend pour corriger un problème de réponse JSON.
+        Ne pas refactorer tout le frontend pour corriger un problème de réponse JSON.
 
-## Sécurité
+        ## Sécurité
 
-Ne jamais commiter :
+        Ne jamais commiter :
 
-* secrets ;
-* tokens ;
-* clés API ;
-* fichiers locaux sensibles ;
-* contenu de `.wrangler` si non prévu ;
-* variables d’environnement privées.
+        * secrets ;
+        * tokens ;
+        * clés API ;
+        * fichiers locaux sensibles ;
+        * contenu de `.wrangler` si non prévu ;
+        * variables d’environnement privées.
 
-Le secret Cloudflare attendu est :
+        Le secret Cloudflare attendu est :
 
-```txt
-GEMINI_API_KEY
-```
+        ```txt
+        GEMINI_API_KEY
+        ```
 
-Il doit rester géré côté Cloudflare, pas dans le dépôt Git.
+        Il doit rester géré côté Cloudflare, pas dans le dépôt Git.
 
-## Git et déploiement
+        ## Git et déploiement
 
-Avant un commit, demander ou vérifier :
+        Avant un commit, demander ou vérifier :
 
-```bash
-git status
-```
+        ```bash
+        git status
+        ```
 
-Ordre de travail préféré :
+        Ordre de travail préféré :
 
-1. Modifier le code localement.
-2. Déployer le Worker avec :
+        1. Modifier le code localement.
+        2. Déployer le Worker avec :
 
-```bash
-npx wrangler deploy
-```
+        ```bash
+        npx wrangler deploy
+        ```
 
-3. Tester depuis GitHub Pages.
-4. Si le résultat est OK seulement :
+        3. Tester depuis GitHub Pages.
+        4. Si le résultat est OK seulement :
 
-```bash
-git add .
-git commit -m "..."
-git push
-```
+        ```bash
+        git add .
+        git commit -m "..."
+        git push
+        ```
 
-Important : `npx wrangler deploy` déploie le Worker local vers Cloudflare, mais ne commit rien sur GitHub.
+        Important : `npx wrangler deploy` déploie le Worker local vers Cloudflare, mais ne commit rien sur GitHub.
 
-Avant un déploiement, vérifier qu’aucun fichier sensible n’est présent.
+        Avant un déploiement, vérifier qu’aucun fichier sensible n’est présent.
 
-Ne pas proposer une release GitHub sauf si cela devient vraiment pertinent. Pour l’instant, un commit suffit.
+        Ne pas proposer une release GitHub sauf si cela devient vraiment pertinent. Pour l’instant, un commit suffit.
 
-## Roadmap courte
+        ## Roadmap courte
 
-### MVP
+        ### MVP
 
-* saisie texte ;
-* recettes ;
-* appel Gemini stable.
+        * saisie texte ;
+        * recettes ;
+        * appel Gemini stable.
 
-### V1
+        ### V1
 
-* micro ;
-* favoris ;
-* historique.
+        * micro ;
+        * favoris ;
+        * historique.
 
-### V2
+        ### V2
 
-* liste de courses.
+        * liste de courses.
 
-### V3
+        ### V3
 
-* gestion du stock.
+        * gestion du stock.
 
-### Idée future
+        ### Idée future
 
-* Brainrot School Furnitures.
+        * Brainrot School Furnitures.
+
+        ## Session rules
+
+Before proposing code changes:
+
+* Read `PROJECT_STATE.md`.
+* Identify the exact file to modify.
+* If unsure whether the target file is `app.js`, `worker/index.js`, `index.html`, or `styles.css`, ask before proposing code.
+* Propose only one change at a time.
+* Do not mix prompt changes and Worker parsing changes in the same step.
+* Do not edit files unless explicitly asked.
+* Do not run commands unless explicitly asked.
+* Prefer the smallest safe change.
+* Wait for validation before giving code or applying changes.
+
+For Brainrot Kitchen:
+
+* Front prompt construction currently lives in `app.js`.
+* Worker API logic lives in `worker/index.js`.
+* UI structure lives in `index.html`.
+* UI styling lives in `styles.css`.
+* Project status and next priorities live in `PROJECT_STATE.md`.
