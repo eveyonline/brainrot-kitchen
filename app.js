@@ -175,6 +175,11 @@ Rules:
 - Prefer Thermomix-friendly ideas first when relevant, but do not force every recipe to require a Thermomix
 - Prefer ingredients already in stock
 - Keep notes under 12 words
+- The response must be directly parseable with JSON.parse()
+- The first character of the response must be [
+- The last character of the response must be ]
+- Never return an object, an error message, explanations, or alternative formats
+- If the request is difficult, still return 3 simple valid vegetarian meal suggestions
 - Return ONLY the JSON array, no other text
 - Do not use markdown
 - Do not wrap the JSON in code fences

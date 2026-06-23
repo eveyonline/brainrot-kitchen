@@ -23,7 +23,7 @@ async function handleRecipes(request, env) {
       { error: 'Missing GEMINI_API_KEY secret' },
       { 
         status: 502,
-        headers: corsHeaders(), 
+        headers: corsHeaders(request), 
       }
 
     );
