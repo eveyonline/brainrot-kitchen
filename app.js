@@ -62,7 +62,7 @@ const ERROR_CONTENTS = {
   AI_RATE_LIMITED: {
       icon: 'assets/icons/errors/rate-limited.png',
       title: 'TOO MANY POTS IN THE KITCHEN',
-      message: 'La cuisine reçoit trop de commandes en même temps. Réessaie dans quelques minutes.',
+      message: 'Trop de demandes à la fois ! La marmite surchauffe. Attends 5–10 min avant de relancer.',
   },
   NETWORK_ERROR: {
       icon: 'assets/icons/errors/no-connection.png',

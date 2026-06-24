@@ -342,7 +342,46 @@ Rules for fallback recipes:
   * `ok_for`
   * `ingredients_needed`
 
-### Then
+## Latest session — Fallback recipes + improved 429 error
+
+### What was changed
+
+* Added `FALLBACK_MEALS` array in `app.js` with 3 local vegetarian recipes.
+* Modified `askGemini()` catch block to display fallback meals when `AI_SERVICE_UNAVAILABLE` (502/503).
+* Updated `showSuggestions()` to accept optional `fallbackText` parameter.
+* Replaced static "tonight's ideas" title header with dynamic `fallback-note` span.
+* Improved `AI_RATE_LIMITED` error message to warn users about hitting quota limits.
+
+### Why
+
+* When Gemini is temporarily down, app now offers immediate local suggestions instead of only an error.
+* Clearer messaging for 429 errors helps users understand they're rate-limited, not experiencing a technical failure.
+* Maintains MVP principle: stability first, useful even when API is unavailable.
+
+### What was validated
+
+* Fallback recipes respect family constraints (vegetarian by default).
+* Error handling correctly maps `API 502`/`API 503` → `AI_SERVICE_UNAVAILABLE`.
+* 429 error message is now explicit about waiting before retry.
+* All changes are frontend-only; no Worker changes needed.
+
+### Files touched
+
+* `app.js`: fallback logic, error messages, function signatures.
+* `index.html`: dynamic header for suggestions.
+* `styles.css`: `.fallback-note` styling (yellow, smaller font).
+
+### Commits
+
+* "Add local fallback for recipes" – pushed to `origin/main`.
+
+### Known next steps
+
+1. Test locally to confirm fallback + error flows work in browser.
+2. Consider expanding fallback recipes based on user feedback if "loved" ratings cluster around certain meals.
+3. Later: integrate `bk_history` feedback into prompt suggestions or fallback rotation.
+
+### Then (older priority list)
 
 1. Fix `share-modal.js` null-guard.
 2. Improve Worker parsing robustness.
