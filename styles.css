@@ -309,6 +309,18 @@
       text-transform: uppercase;
       text-shadow: 2px 2px 0 var(--black);
     }
+    #suggestions-header > div {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .fallback-note {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--yellow);
+      text-transform: none;
+      letter-spacing: .3px;
+    }
     #btn-other { padding: 8px 10px; background: var(--yellow); color: var(--black); font-size: 11px; display:flex; gap:6px; align-items:center; }
     .pixel-retry::before { content:""; position:absolute; inset:5px; border:5px solid var(--black); border-left-color:transparent; border-radius:50%; }
     .pixel-retry::after { content:""; position:absolute; right:1px; top:3px; width:10px; height:10px; background:var(--black); clip-path:polygon(100% 0,100% 100%,0 50%); }

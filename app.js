@@ -6,6 +6,30 @@ const state = {
   activeChips: new Set(),
 };
 
+const FALLBACK_MEALS = [
+  {
+    title: 'Gratin de courgettes au fromage',
+    time: 30,
+    notes: 'Rapide, crémeux et familial',
+    ok_for: ['Mum', 'Dad', 'Terence', 'James'],
+    ingredients_needed: ['courgettes', 'fromage râpé', 'crème', 'œufs'],
+  },
+  {
+    title: 'Buddha bowl de quinoa et légumes',
+    time: 25,
+    notes: 'Léger, riche en protéines et couleur',
+    ok_for: ['Mum', 'Dad', 'Terence', 'James'],
+    ingredients_needed: ['quinoa', 'pois chiches', 'légumes', 'sauce soja'],
+  },
+  {
+    title: 'Wraps de pois chiches épicés',
+    time: 20,
+    notes: 'Facile à préparer et à personnaliser',
+    ok_for: ['Mum', 'Dad', 'Terence', 'James'],
+    ingredients_needed: ['tortillas', 'pois chiches', 'salade', 'yaourt'],
+  },
+];
+
 const FAMILY = `Family constraints (always apply, never override):
   - No pork, no alcohol in cooking
   - Mum: vegetarian by default, fish only when explicitly allowed, loves seeds and fat
@@ -219,7 +243,14 @@ try {
     state.lastSuggestions = meals;
     showSuggestions(meals);
   } catch (err) {
-      showError(getErrorCode(err));
+      const code = getErrorCode(err);
+      if (code === 'AI_SERVICE_UNAVAILABLE') {
+        showError(code);
+        state.lastSuggestions = FALLBACK_MEALS;
+        showSuggestions(FALLBACK_MEALS, 'Fallback brainrot : Gemini a pris une sieste dans le frigo.');
+      } else {
+        showError(code);
+      }
   } finally {
     showLoader(false);
     micBtn.classList.remove('thinking');
@@ -228,9 +259,10 @@ try {
   }
 }
 
-function showSuggestions(meals) {
+function showSuggestions(meals, fallbackText = '') {
   const container = document.getElementById('suggestions');
   container.querySelectorAll('.suggestion').forEach(el => el.remove());
+  document.getElementById('fallback-note').textContent = fallbackText;
 
   meals.forEach((meal) => {
     const el = document.createElement('div');
@@ -246,7 +278,10 @@ function showSuggestions(meals) {
 
   container.classList.add('visible');
 }
-function hideSuggestions() { document.getElementById('suggestions').classList.remove('visible'); }
+function hideSuggestions() {
+  document.getElementById('suggestions').classList.remove('visible');
+  document.getElementById('fallback-note').textContent = '';
+}
 
 function chooseMeal(meal) {
   state.chosenMeal = meal;
@@ -307,23 +342,23 @@ function getErrorCode(err) {
 }
 
 function getErrorContent(code) {
-  const error = getErrorContent(code);
+  const error = ERROR_CONTENTS[code] || ERROR_CONTENTS.APP_ERROR;
 
-    if (!error.variants) {
-        return error;
-    }
+  if (!error.variants) {
+    return error;
+  }
 
-    const variant = error.variants[Math.floor(Math.random() * error.variants.length)];
+  const variant = error.variants[Math.floor(Math.random() * error.variants.length)];
 
-    return {
-        icon: error.icon,
-        title: variant.title,
-        message: variant.message,
-    };
+  return {
+    icon: error.icon,
+    title: variant.title,
+    message: variant.message,
+  };
 }
 
 function showError(code = 'APP_ERROR') {
-  const error = ERROR_CONTENTS[code] || ERROR_CONTENTS.APP_ERROR;
+  const error = getErrorContent(code);
   const el = document.getElementById('error-msg');
 
   el.innerHTML = `
