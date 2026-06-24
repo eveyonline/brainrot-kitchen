@@ -16,33 +16,49 @@ const FAMILY = `Family constraints (always apply, never override):
 const ERROR_CONTENTS = {
   AI_SERVICE_UNAVAILABLE: {
     icon: 'assets/icons/errors/ai-unavailable.png',
-    title: 'THE BRAINROT CHEF IS TAKING A POWER NAP',
-    message: 'Impossible de générer une recette pour le moment. Le chef est parti méditer sur une tomate.',
+    variants: [
+      {
+          title: 'THE BRAINROT KITCHEN IS TAKING A POWER NAP',
+          message: 'Impossible de générer une recette pour le moment. La marmite fait un reboot dans une tomate.',
+      },
+      {
+          title: 'THE FRIDGE IS HAVING A SIDE QUEST',
+          message: 'Impossible de générer une recette pour le moment. Le frigo est parti farmer de l’inspiration.',
+      },
+      {
+          title: 'THE TOMATO IS IN CHARGE NOW',
+          message: 'La génération a trébuché dans le placard. Réessaie dans un instant, la sauce revient.',
+      },
+      {
+          title: 'THE BRAINROT KITCHEN IS BUFFERING',
+          message: 'Les idées mijotent trop lentement. La marmite recharge ses neurones de courgette.',
+      },
+    ], 
   },
   AI_RATE_LIMITED: {
-    icon: 'assets/icons/errors/rate-limited.png',
-    title: 'TOO MANY COOKS IN THE KITCHEN',
-    message: 'Le chef reçoit trop de commandes en même temps. Réessaie dans quelques minutes.',
+      icon: 'assets/icons/errors/rate-limited.png',
+      title: 'TOO MANY POTS IN THE KITCHEN',
+      message: 'La cuisine reçoit trop de commandes en même temps. Réessaie dans quelques minutes.',
   },
   NETWORK_ERROR: {
-    icon: 'assets/icons/errors/no-connection.png',
-    title: 'THE FRIDGE LOST WIFI',
-    message: 'Impossible de contacter la cuisine. Vérifie ta connexion internet.',
+      icon: 'assets/icons/errors/no-connection.png',
+      title: 'THE FRIDGE LOST WIFI',
+      message: 'Impossible de contacter la cuisine. Vérifie ta connexion internet.',
   },
   TIMEOUT: {
-    icon: 'assets/icons/errors/timeout.png',
-    title: 'THE SOUP IS STILL LOADING',
-    message: 'La génération prend plus de temps que prévu. Tu peux réessayer.',
+      icon: 'assets/icons/errors/timeout.png',
+      title: 'THE SOUP IS STILL LOADING',
+      message: 'La génération prend plus de temps que prévu. Tu peux réessayer.',
   },
   AI_EMPTY_RESPONSE: {
-    icon: 'assets/icons/errors/empty-response.png',
-    title: 'THE CHEF FORGOT HOW TO COOK',
-    message: 'Les ingrédients ont été compris. L’inspiration, beaucoup moins.',
+      icon: 'assets/icons/errors/empty-response.png',
+      title: 'THE KITCHEN FORGOT HOW TO COOK',
+      message: 'Les ingrédients ont été compris. L’inspiration, beaucoup moins.',
   },
   APP_ERROR: {
-    icon: 'assets/icons/errors/server-error.png',
-    title: 'THE KITCHEN IS CONFUSED',
-    message: 'Brainrot Kitchen a rencontré un problème inattendu. Réessaie dans quelques instants.',
+      icon: 'assets/icons/errors/server-error.png',
+      title: 'THE KITCHEN IS CONFUSED',
+      message: 'Brainrot Kitchen a rencontré un problème inattendu. Réessaie dans quelques instants.',
   },
 };
 
@@ -284,9 +300,26 @@ function getErrorCode(err) {
 
   if (err.message === 'API 429') return 'AI_RATE_LIMITED';
   if (err.message === 'API 502') return 'AI_SERVICE_UNAVAILABLE';
+  if (err.message === 'API 503') return 'AI_SERVICE_UNAVAILABLE';
   if (err.message === 'API 504') return 'TIMEOUT';
 
   return 'APP_ERROR';
+}
+
+function getErrorContent(code) {
+  const error = getErrorContent(code);
+
+    if (!error.variants) {
+        return error;
+    }
+
+    const variant = error.variants[Math.floor(Math.random() * error.variants.length)];
+
+    return {
+        icon: error.icon,
+        title: variant.title,
+        message: variant.message,
+    };
 }
 
 function showError(code = 'APP_ERROR') {
