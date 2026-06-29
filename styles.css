@@ -290,9 +290,10 @@
     .chip:nth-child(5) { background: #ff8bd7; grid-column: 1 / -1; }
     .chip:active, .chip.selected { transform: translate(4px, 4px); box-shadow: none; filter: saturate(1.4); }
 
-    #text-row { display: flex; width: 100%; gap: 10px; }
-    #text-input { flex: 1; font-size: 15px; }
-    #send-btn { width: 56px; background: var(--green); color: var(--black); display:grid; place-items:center; }
+    #text-row { display: flex; width: 100%; gap: 10px; align-items: center; }
+    .text-input-wrapper { flex: 1; display: flex; flex-direction: column; width: 100%; }
+    #text-input { flex: 1 1 0; width: 100%; min-width: 0; font-size: 15px; padding: 12px 14px; }
+    #send-btn { width: 56px; min-width: 56px; background: var(--green); color: var(--black); display:grid; place-items:center; }
     #send-btn:active, #btn-update-stock:active, #btn-other:active, #btn-save-settings:active { transform: translate(4px, 4px); box-shadow: none; }
     .pixel-arrow::before { content:""; position:absolute; left:3px; top:9px; width:18px; height:6px; background:var(--black); }
     .pixel-arrow::after { content:""; position:absolute; right:1px; top:4px; width:14px; height:14px; background:var(--black); clip-path:polygon(0 0,100% 50%,0 100%); }

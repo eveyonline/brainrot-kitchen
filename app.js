@@ -57,6 +57,10 @@ const ERROR_CONTENTS = {
           title: 'THE BRAINROT KITCHEN IS BUFFERING',
           message: 'Les idées mijotent trop lentement. La marmite recharge ses neurones de courgette.',
       },
+      {
+          title: 'THE OVEN IS DOING YOGA',
+          message: 'L’inspiration prend un moment. Patiente une seconde et relance la recette.',
+      },
     ], 
   },
   AI_RATE_LIMITED: {
