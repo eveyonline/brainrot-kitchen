@@ -383,11 +383,10 @@ Rules for fallback recipes:
 
 ### Then (older priority list)
 
-1. Fix `share-modal.js` null-guard.
-2. Improve Worker parsing robustness.
-3. Fix `other ideas` chip-context duplication.
-4. Improve language/i18n behavior.
-5. Later: favorites/history.
+1. Improve Worker parsing robustness.
+2. Fix `other ideas` chip-context duplication.
+3. Improve language/i18n behavior.
+4. Later: favorites/history.
 
 ## Git notes
 

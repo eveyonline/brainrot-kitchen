@@ -179,7 +179,8 @@ document.getElementById('text-input').addEventListener('keydown', e => {
 });
 
 document.getElementById('btn-other').addEventListener('click', () => {
-  askGemini(state.lastQuery + ' — give me different ideas from the previous ones');
+  if (!state.lastQuery) return;
+  askGemini(state.lastQuery.replace(/\.\s*$/, '') + ' — give me different ideas from the previous ones');
 });
 
 async function askGemini(userMessage) {
@@ -213,11 +214,12 @@ Rules:
 - Respect ALL family constraints
 - Meals must be strictly vegetarian by default: no meat, no fish, no seafood, unless the user explicitly asks for fish or the "fish is allowed for this meal" chip is active
 - Meals are family-friendly by default
-- Avoid shopping by default: prefer common pantry, fridge or freezer ingredients
+- Always prefer recipes that can be made with the ingredients already in stock
+- Do not recommend shopping unless the user explicitly asks for more ingredients or a shopping list
+- If a recipe cannot be made fully from stock, still suggest the closest option and mention missing ingredients in the notes
 - Meals must be low-effort and realistic for a weekday evening
 - Meals must take no more than 40 minutes total
 - Prefer Thermomix-friendly ideas first when relevant, but do not force every recipe to require a Thermomix
-- Prefer ingredients already in stock
 - Keep notes under 12 words
 - The response must be directly parseable with JSON.parse()
 - The first character of the response must be [
